@@ -20,7 +20,7 @@ client.on('ready', () => {
 
 function cont(container, outlcl) { //container collects the words, outlcl is the msg sent to use to find target channel/guild
     if (container[0][0] == TOP)  //check if there's more words
-    {
+    {//if not
         var comp = "";
         for (let i = 0; i < container.length; i++) {
             if (comp.length + container[i][1].content.length >= 2000)  //split messages because 2000 character limit
@@ -39,7 +39,7 @@ function cont(container, outlcl) { //container collects the words, outlcl is the
         }
     }
     else
-    {
+    {//if so
         outlcl.guild.channels.cache.get(STORYCH).messages.fetch( { before: container[0][0], limit: 100 }).then(words => { //grab the next 100 messages
             for (var e of words)
             {
