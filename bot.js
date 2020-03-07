@@ -18,7 +18,7 @@ client.on('ready', () => {
     client.user.setActivity('giving headpats', { type: 'PLAYING' });  //headpats cuz why not uwu
   });
 
-function cont(container, outlcl) {
+function cont(container, outlcl) { //container collects the words, outlcl is the msg sent to use to find target channel/guild
     if (container[0][0] == TOP)  //check if there's more words
     {
         var comp = "";
@@ -28,7 +28,7 @@ function cont(container, outlcl) {
                 outlcl.channel.send(comp);
                 comp = '';
             }
-            if (!container[i][1].author.bot)
+            if (!container[i][1].author.bot) //don't include bot level ups
             {
                 comp = comp + container[i][1].content + " "; //space
             }
@@ -48,7 +48,7 @@ function cont(container, outlcl) {
                     container.unshift(e); //plop into the array
                 }
             }
-            cont(container, outlcl);
+            cont(container, outlcl); //keep going
         });
     }
 }
@@ -56,7 +56,7 @@ client.on('message', msg => {
     if (msg.toString() == "!compile" && msg.channel.id == '') //compiles first 100 messages.  Put bot commands channel id between quotes to restrict bot to the channel
     {
         msg.channel.send("working...");
-        out = [];
+        out = []; //holds words
         msg.guild.channels.cache.get(STORYCH).messages.fetch( { limit: 100 }).then(words => { //grab 100 messages at a time
             for (var e of words)
             {
@@ -65,43 +65,7 @@ client.on('message', msg => {
                     out.unshift(e); //plop into the array
                 }
             }
-            cont(out, msg);
+            cont(out, msg); //next batch
         });
     }
-    /*else if (msg.toString() == "!continue")
-    {
-        if (out[0][0] == TOP)  //check if there's more words
-        {
-            msg.channel.send('finished! type `!post` to read');
-        }
-        else
-        {
-            msg.guild.channels.get(STORYCH).fetchMessages( { before: out[0][0], limit: 100 }).then(words => { //grab the next 100 messages
-                for (var e of words)
-                {
-                    out.unshift(e); //plop into the array
-                }
-            });
-            msg.channel.send('type `!continue` to continue');
-        }
-    }
-    else if (msg.toString() == "!post") //outputs compiled array
-    {
-        var comp = "";
-        for (let i = 0; i < out.length; i++) {
-            if (comp.length + out[i][1].content.length >= 2000)  //split messages because 2000 character limit
-            {
-                msg.channel.send(comp);
-                comp = '';
-            }
-            if (!out[i][1].author.bot)
-            {
-                comp = comp + out[i][1].content + " "; //space
-            }
-            if (i == out.length-1)
-            {
-                msg.channel.send(comp); //finish
-            }
-        }
-    }*/
 });
